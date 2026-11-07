@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	akrouter "github.com/router-for-me/CLIProxyAPI/v8/akc/ak-router"
 	"github.com/router-for-me/CLIProxyAPI/v8/internal/registry"
 	"github.com/router-for-me/CLIProxyAPI/v8/internal/watcher/synthesizer"
 	coreauth "github.com/router-for-me/CLIProxyAPI/v8/sdk/cliproxy/auth"
@@ -78,6 +79,8 @@ func normalizedRoutingRuntimeState(cfg *config.Config) routingRuntimeState {
 		state.strategy = "weighted-round-robin"
 	case "fill-first", "fillfirst", "ff":
 		state.strategy = "fill-first"
+	case akrouter.Strategy: // akc hook H-1
+		state.strategy = akrouter.Strategy
 	}
 	state.sessionAffinity = cfg.Routing.SessionAffinity
 	if ttl := strings.TrimSpace(cfg.Routing.SessionAffinityTTL); ttl != "" {
@@ -104,6 +107,8 @@ func newRoutingSelector(state routingRuntimeState) coreauth.Selector {
 		selector = &coreauth.WeightedRoundRobinSelector{}
 	case "fill-first":
 		selector = &coreauth.FillFirstSelector{}
+	case akrouter.Strategy: // akc hook H-2
+		selector = akrouter.NewSelector()
 	default:
 		selector = &coreauth.RoundRobinSelector{}
 	}

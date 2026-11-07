@@ -172,6 +172,8 @@ func selectorStrategy(selector Selector) schedulerStrategy {
 		return schedulerStrategyWeightedRoundRobin
 	case nil, *RoundRobinSelector:
 		return schedulerStrategyRoundRobin
+	case interface{ FillFirstEquivalent() }: // akc hook H-4
+		return schedulerStrategyFillFirst
 	default:
 		return schedulerStrategyCustom
 	}

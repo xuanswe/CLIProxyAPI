@@ -75,6 +75,8 @@ func isBuiltInSelector(selector Selector) bool {
 	switch selector.(type) {
 	case *RoundRobinSelector, *WeightedRoundRobinSelector, *FillFirstSelector:
 		return true
+	case interface{ FillFirstEquivalent() }: // akc hook H-3
+		return true
 	default:
 		return false
 	}
