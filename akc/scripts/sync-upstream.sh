@@ -183,7 +183,7 @@ while read -r tag; do
 	releases+=("$tag")
 done < <(for ref in "${!up_obj[@]}"; do
 	tag=${ref#refs/tags/}
-	[[ $ref == refs/tags/* ]] && is_release "$tag" && echo "$tag"
+	if [[ $ref == refs/tags/* ]] && is_release "$tag"; then echo "$tag"; fi
 done | sort -V)
 
 if ((${#releases[@]} == 0)); then

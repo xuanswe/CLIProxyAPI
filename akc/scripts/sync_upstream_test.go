@@ -212,6 +212,9 @@ func (f *fixture) mustSync(args ...string) string {
 	if code != 0 {
 		f.t.Fatalf("sync %v exit %d\n%s", args, code, out)
 	}
+	if strings.Contains(out, "error:") {
+		f.t.Fatalf("sync %v succeeded but reported an error\n%s", args, out)
+	}
 	return out
 }
 
